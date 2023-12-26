@@ -2,8 +2,8 @@ const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const TelegramBot = require("node-telegram-bot-api");
-const token = "6432961327:AAHWEm3P2o1UMhidPNzN13F6LFREJmfB5UA";
-const chatId = "620621191";
+// const token = "";
+// const chatId = "";
 const port = process.env.PORT || 4000;
 const bot = new TelegramBot(token, {
   polling: true,
