@@ -1,9 +1,9 @@
 const express = require("express");
-const axios = require("axios"); 
+const axios = require("axios");
 const cheerio = require("cheerio");
 const TelegramBot = require("node-telegram-bot-api");
-const token = "Your Token";
-const chatId = "Your chat id";
+const token = "6432961327:AAHWEm3P2o1UMhidPNzN13F6LFREJmfB5UA";
+const chatId = "620621191";
 const port = process.env.PORT || 4000;
 const bot = new TelegramBot(token, {
   polling: true,
@@ -61,8 +61,6 @@ const logic = () => {
 
           const sp = currentPrice1 || currentPrice2;
           const mrp = originalPrice1 || originalPrice2;
-          // console.log(asinSet.get(asin));
-          // console.log(mrp, sp);
 
           let discountPercentage =
             ((parseFloat(mrp) - parseFloat(sp)) / parseFloat(mrp)) * 100;
@@ -76,6 +74,7 @@ const logic = () => {
                 sp
               )} \n\n Discount Percentage : ${discountPercentage}`
             );
+            asinSet.delete(asin);
           }
         })
 
@@ -97,7 +96,7 @@ bot.onText(/\/command1 (.+)/, (msg, match) => {
   bot.sendMessage(chatId, `Received ${asin} added to list Thank you`);
 });
 
-setInterval(logic, 6000);
+setInterval(logic, 60000);
 app.listen(port, () => {
   console.log(`Server Established ${port}`);
 });
