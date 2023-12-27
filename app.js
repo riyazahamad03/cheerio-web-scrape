@@ -1,9 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const TelegramBot = require("node-telegram-bot-api");
-// const token = "";
-// const chatId = "";
+const token = process.env.BOT_TOKEN;
+const chatId = process.env.BOT_CHATID;
 const port = process.env.PORT || 4000;
 const bot = new TelegramBot(token, {
   polling: true,
@@ -15,6 +16,9 @@ const app = express();
 
 // List to store all the Asin
 let asinSet = new Map();
+let list = "";
+
+console.log(list);
 const defaultDisc = 70;
 const logic = () => {
   if (asinSet.size > 0) {
@@ -65,6 +69,8 @@ const logic = () => {
           let discountPercentage =
             ((parseFloat(mrp) - parseFloat(sp)) / parseFloat(mrp)) * 100;
 
+          console.log(asin, discountPercentage);
+
           discountPercentage = Math.round(discountPercentage * 100) / 100;
           const userDisc = asinSet.get(asin);
           if (discountPercentage >= userDisc) {
@@ -85,7 +91,7 @@ const logic = () => {
   }
 };
 
-bot.onText(/\/command1 (.+)/, (msg, match) => {
+bot.onText(/\/Add (.+)/, (msg, match) => {
   console.log("asin  received:", msg.text);
   const chatId = msg.chat.id;
   const receivedText = match[1].split(" ");
@@ -96,7 +102,38 @@ bot.onText(/\/command1 (.+)/, (msg, match) => {
   bot.sendMessage(chatId, `Received ${asin} added to list Thank you`);
 });
 
-setInterval(logic, 60000);
+bot.onText(/\/Delete (.+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  const receivedText = match[1].split(" ");
+
+  const asin = receivedText[0];
+  console.log(asin);
+
+  if (asin in asinSet) {
+    asinSet.delete(asin);
+    bot.sendMessage(chatId, `Deleted ${asin} SuccessFully`);
+  } else {
+    bot.sendMessage(chatId, "No Asin exist in the tracking");
+  }
+});
+
+bot.onText(/\/Clear (.+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+});
+
+bot.on("message", (msg) => {
+  const chatId = msg.chat.id;
+  bot.sendMessage(
+    chatId,
+    "To add Product in tracking bucket \n Eg :  /Add B0CQDBNS64 20 \n \n To Delete a product from tracking bucket \n Eg : /Delete B0CQDBNS64"
+  );
+});
+// setInterval(logic, 6000);
+
+app.get("/", (req, res) => {
+  res.send("Hello World")
+});
+
 app.listen(port, () => {
   console.log(`Server Established ${port}`);
 });
