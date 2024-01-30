@@ -1,8 +1,13 @@
 # cheerio-web-scrape
+
 this application helps to track the product price of an amazon seamlessly
 
-all you need is a bot configured 
-1) token id
-2) chat id 
+all you need is a bot configured
 
-replace both and start running 
+1. token id
+2. chat id
+
+replace both and start running
+
+![Alt text](/Assets/amazon.png)
+![Alt text](/Assets/flipkart.png)

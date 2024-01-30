@@ -16,15 +16,12 @@ const app = express();
 
 // List to store all the Asin
 let asinSet = new Map();
-let list = "";
-
-console.log(list);
 const defaultDisc = 70;
 const logic = () => {
   if (asinSet.size > 0) {
     for (let [asin, disc] of asinSet) {
       const Link = "https://www.amazon.in/dp/" + asin;
-      console.log(asin);
+
       axios
         .get(Link)
         .then((response) => {
@@ -98,7 +95,6 @@ bot.onText(/\/Add (.+)/, (msg, match) => {
   const asin = receivedText[0];
   const disc = parseInt(receivedText[1]);
   asinSet.set(asin, disc || defaultDisc);
-  console.log(asinSet);
   bot.sendMessage(chatId, `Received ${asin} added to list Thank you`);
 });
 
@@ -107,9 +103,7 @@ bot.onText(/\/Delete (.+)/, (msg, match) => {
   const receivedText = match[1].split(" ");
 
   const asin = receivedText[0];
-  console.log(asin);
-
-  if (asin in asinSet) {
+  if (asinSet.has(asin)) {
     asinSet.delete(asin);
     bot.sendMessage(chatId, `Deleted ${asin} SuccessFully`);
   } else {
@@ -128,12 +122,14 @@ bot.on("message", (msg) => {
     "To add Product in tracking bucket \n Eg :  /Add B0CQDBNS64 20 \n \n To Delete a product from tracking bucket \n Eg : /Delete B0CQDBNS64"
   );
 });
-// setInterval(logic, 6000);
+setInterval(logic, 60000);
 
 app.get("/", (req, res) => {
-  res.send("Hello World")
+  const entries = Array.from(asinSet.entries());
+  const data = Object.fromEntries(entries);
+  res.send(data);
 });
 
 app.listen(port, () => {
-  console.log(`Server Established ${port}`);
+  console.log(`Server Established at Port : ${port}`);
 });
