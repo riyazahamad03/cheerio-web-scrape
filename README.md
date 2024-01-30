@@ -10,4 +10,4 @@ all you need is a bot configured
 replace both and start running
 
 ![Alt text](/Assets/amazon.png)
-![Alt text](/Assets/flipkart.png)
+![Alt text](/Assets/flipkart1.png)
